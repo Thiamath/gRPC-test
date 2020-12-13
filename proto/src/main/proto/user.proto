@@ -1,0 +1,9 @@
+option java_package = "test.thiamath.user";
+
+message User {
+
+}
+
+service UserService {
+  rpc GetUser(User) returns (User);
+}

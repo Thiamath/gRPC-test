@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group 'test.thiamath.user'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "${artifactory_contextUrl}/grpc_test"
+        credentials {
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+        }
+        name = "maven-main-cache"
+    }
+}
+
+dependencies {
+    implementation group: 'test.thiamath.user', name: 'proto', version: '1.0-SNAPSHOT'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
