@@ -8,20 +8,13 @@ import java.util.concurrent.TimeUnit;
 
 public class UserServer {
 
-    private final int port;
     private final Server server;
 
-    public UserServer(int port) {
-        this(ServerBuilder.forPort(port), port);
-    }
-
     /**
-     * Create a RouteGuide server using serverBuilder as a base and features as data.
+     * Create a User server using serverBuilder as a base and features as data.
      */
-    public UserServer(ServerBuilder<?> serverBuilder, int port) {
-        this.port = port;
-        server = serverBuilder.addService(new UserService())
-                .build();
+    public UserServer(int port) {
+        server = ServerBuilder.forPort(port).addService(new UserService()).build();
     }
 
     /**
@@ -35,7 +28,7 @@ public class UserServer {
 
     public void start() throws IOException {
         server.start();
-        System.out.println("Server started, listening on " + port);
+        System.out.println("Server started, listening on " + server.getPort());
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // Use stderr here since the logger may have been reset by its JVM shutdown hook.
             System.err.println("*** shutting down gRPC server since JVM is shutting down");
