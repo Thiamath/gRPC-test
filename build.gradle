@@ -13,3 +13,7 @@ repositories {
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
+
+ext {
+    artifactory_password = System.getenv("ARTIFACTORY_PASSWORD")
+}
