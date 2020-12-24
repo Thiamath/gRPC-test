@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'test.thiamath.user'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "${artifactory_contextUrl}/grpc_test"
+        credentials {
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+        }
+        name = "maven-main-cache"
+    }
+}
+
+dependencies {
+    implementation 'io.grpc:grpc-protobuf:1.33.1'
+    implementation 'io.grpc:grpc-stub:1.33.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    implementation group: 'test.thiamath.user', name: 'proto', version: '1.0-SNAPSHOT'
+}
+
+test {
+    useJUnitPlatform()
+}
