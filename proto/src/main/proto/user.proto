@@ -10,4 +10,5 @@ service UserService {
 
 message User {
   string name = 1;
+  string dob = 2;
 }
