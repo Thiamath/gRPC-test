@@ -3,6 +3,12 @@ plugins {
     id 'idea'
 }
 
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor 0, 'seconds'
+    }
+}
+
 group 'test.thiamath.user'
 version '1.0-SNAPSHOT'
 
