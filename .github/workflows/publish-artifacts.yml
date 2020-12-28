@@ -31,9 +31,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew :proto:build
       - name: Publish to Artifactory
-        run: ./gradlew artifactoryPublish
+        run: ./gradlew :proto:artifactoryPublish
         env:
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
         
