@@ -14,7 +14,10 @@ public class Client {
         try {
             UserClient client = new UserClient(channel);
 
-            client.getUser();
+            for (int i = 0; i < 10; i++) {
+                client.getUser("User_" + i);
+                Thread.sleep(500);
+            }
         } finally {
             channel.shutdownNow().awaitTermination(60, TimeUnit.SECONDS);
         }

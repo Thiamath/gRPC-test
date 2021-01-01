@@ -10,17 +10,17 @@ public class UserClient {
     private static final Logger logger = Logger.getLogger(UserClient.class.getName());
 
     private final UserServiceGrpc.UserServiceBlockingStub blockingStub;
-    private final UserServiceGrpc.UserServiceStub asyncStub;
+//    private final UserServiceGrpc.UserServiceStub asyncStub;
 
     public UserClient(Channel channel) {
         blockingStub = UserServiceGrpc.newBlockingStub(channel);
-        asyncStub = UserServiceGrpc.newStub(channel);
+//        asyncStub = UserServiceGrpc.newStub(channel);
     }
 
-    public void getUser() {
+    public void getUser(final String username) {
         logger.info("Getting user");
 
-        UserOuterClass.User request = UserOuterClass.User.newBuilder().setName("Test_User").build();
+        UserOuterClass.User request = UserOuterClass.User.newBuilder().setName(username).build();
         UserOuterClass.User user = blockingStub.getUser(request);
 
         logger.info("Got user " + user.getName());
