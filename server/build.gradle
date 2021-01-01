@@ -1,9 +1,25 @@
 plugins {
     id 'java'
+    id 'com.google.cloud.tools.jib' version '2.7.0'
 }
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 group 'test.thiamath.user'
 version '1.0-SNAPSHOT'
+
+jib {
+    from {
+        image = 'gcr.io/distroless/java:11'
+    }
+    to {
+        image = 'thiamath/grpc_test_server:latest'
+    }
+    container {
+        ports = ['8980']
+    }
+}
 
 repositories {
     mavenCentral()
