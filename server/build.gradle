@@ -15,6 +15,11 @@ jib {
     }
     to {
         image = 'thiamath/grpc_test_server:latest'
+//        allowInsecureRegistries = true
+        auth {
+            username = System.getenv("DOCKERHUB_USER")
+            password = System.getenv("DOCKERHUB_TOKEN")
+        }
     }
     container {
         ports = ['8980']
