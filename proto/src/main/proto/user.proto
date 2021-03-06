@@ -1,14 +1,31 @@
 syntax = "proto3";
 
-option java_package = "test.thiamath.user";
+option java_package = "com.thiamath.user";
 
 package user;
 
 service UserService {
-  rpc GetUser(User) returns (User);
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc GetUserList(GetUserRequest) returns (stream User);
+  rpc sendUserList(stream User) returns (SendUserListResponse);
+  rpc conversation(stream ConversationStream) returns (ConversationStream);
+}
+
+message Void {}
+
+message GetUserRequest {
+  string name = 1;
 }
 
 message User {
   string name = 1;
   string dob = 2;
+}
+
+message SendUserListResponse {
+  uint32 received = 1;
+}
+
+message ConversationStream {
+  string message = 1;
 }
