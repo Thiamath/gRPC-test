@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'test.thiamath.user'
@@ -7,14 +8,14 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    maven {
-        url "${artifactory_contextUrl}/grpc_test"
-        credentials {
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-        }
-        name = "maven-main-cache"
-    }
+//    maven {
+//        url "${artifactory_contextUrl}/grpc_test"
+//        credentials {
+//            username = "${artifactory_user}"
+//            password = "${artifactory_password}"
+//        }
+//        name = "maven-main-cache"
+//    }
 }
 
 dependencies {
@@ -23,9 +24,14 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
-    implementation (group: 'test.thiamath.user', name: 'proto', version: '1.0-SNAPSHOT'){
-        changing = true
-    }
+    implementation project(':proto')
+    //implementation (group: 'test.thiamath.user', name: 'proto', version: '1.0-SNAPSHOT'){
+        //changing = true
+    //}
+}
+
+application {
+    mainClass = 'com.thiamath.user.client.Client'
 }
 
 test {

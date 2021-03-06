@@ -11,6 +11,15 @@ plugins {
 group 'test.thiamath.user'
 version '1.0-SNAPSHOT'
 
+configurations {
+    instrumentedJars {
+        canBeConsumed = true
+        canBeResolved = false
+        // If you want this configuration to share the same dependencies, otherwise omit this line
+        extendsFrom implementation, runtimeOnly
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -59,28 +68,28 @@ protobuf {
     }
 }
 
-artifactory {
-    contextUrl = "${artifactory_contextUrl}"
-    publish {
-        repository {
-            repoKey = 'grpc_test'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-            maven = true
-        }
-        defaults {
-            publications ('mavenJava')
-        }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact (sourcesJar) {
-                classifier = 'sources'
-            }
-        }
-    }
-}
+//artifactory {
+//    contextUrl = "${artifactory_contextUrl}"
+//    publish {
+//        repository {
+//            repoKey = 'grpc_test'
+//            username = "${artifactory_user}"
+//            password = "${artifactory_password}"
+//            maven = true
+//        }
+//        defaults {
+//            publications ('mavenJava')
+//        }
+//    }
+//}
+//
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//            artifact (sourcesJar) {
+//                classifier = 'sources'
+//            }
+//        }
+//    }
+//}

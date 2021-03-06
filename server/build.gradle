@@ -3,28 +3,28 @@ plugins {
     id 'com.google.cloud.tools.jib' version '2.7.0'
 }
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+sourceCompatibility = '13'
+targetCompatibility = '13'
 
 group 'test.thiamath.user'
 version '1.0-SNAPSHOT'
 
-jib {
-    from {
-        image = 'gcr.io/distroless/java:11'
-    }
-    to {
-        image = 'thiamath/grpc_test_server:latest'
+//jib {
+//    from {
+//        image = 'gcr.io/distroless/java:11'
+//    }
+//    to {
+//        image = 'thiamath/grpc_test_server:latest'
 //        allowInsecureRegistries = true
-        auth {
-            username = System.getenv("DOCKERHUB_USER")
-            password = System.getenv("DOCKERHUB_TOKEN")
-        }
-    }
-    container {
-        ports = ['8980']
-    }
-}
+//        auth {
+//            username = System.getenv("DOCKERHUB_USER")
+//            password = System.getenv("DOCKERHUB_TOKEN")
+//        }
+//    }
+//    container {
+//        ports = ['8980']
+//    }
+//}
 
 repositories {
     mavenCentral()
@@ -44,9 +44,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
-    implementation (group: 'test.thiamath.user', name: 'proto', version: '1.0-SNAPSHOT'){
-        changing = true
-    }
+    implementation project(':proto')
+    //implementation (group: 'test.thiamath.user', name: 'proto', version: '1.0-SNAPSHOT'){
+    //    changing = true
+    //}
 }
 
 test {
