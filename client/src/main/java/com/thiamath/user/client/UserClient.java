@@ -1,8 +1,8 @@
 package com.thiamath.user.client;
 
+import com.thiamath.user.UserOuterClass;
+import com.thiamath.user.UserServiceGrpc;
 import io.grpc.Channel;
-import test.thiamath.user.UserOuterClass;
-import test.thiamath.user.UserServiceGrpc;
 
 import java.util.logging.Logger;
 
@@ -20,7 +20,9 @@ public class UserClient {
     public void getUser(final String username) {
         logger.info("Getting user");
 
-        UserOuterClass.User request = UserOuterClass.User.newBuilder().setName(username).build();
+        UserOuterClass.GetUserRequest request = UserOuterClass.GetUserRequest.newBuilder()
+                .setName("Perry")
+                .build();
         UserOuterClass.User user = blockingStub.getUser(request);
 
         logger.info("Got user " + user.getName());
