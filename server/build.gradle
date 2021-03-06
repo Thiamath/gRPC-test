@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.google.cloud.tools.jib' version '2.7.0'
+    id 'application'
 }
 
 sourceCompatibility = '13'
@@ -48,6 +49,10 @@ dependencies {
     //implementation (group: 'test.thiamath.user', name: 'proto', version: '1.0-SNAPSHOT'){
     //    changing = true
     //}
+}
+
+application {
+    mainClassName = 'com.thiamath.user.service.UserServer'
 }
 
 test {

@@ -31,7 +31,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'com.thiamath.user.client.Client'
+    mainClassName = 'com.thiamath.user.client.Client'
 }
 
 test {
