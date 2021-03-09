@@ -58,6 +58,10 @@ application {
     mainClassName = 'com.thiamath.user.service.UserServer'
 }
 
+installDist {
+    destinationDir(new File("D:/temp/$project.name"))
+}
+
 test {
     useJUnitPlatform()
 }
