@@ -6,7 +6,8 @@ package user;
 
 service UserService {
   rpc GetUser(GetUserRequest) returns (User);
-  rpc GetUserList(GetUserRequest) returns (stream User);
+  rpc GetUserList(Void) returns (stream User);
+  rpc sendUser(User) returns (SendUserListResponse);
   rpc sendUserList(stream User) returns (SendUserListResponse);
   rpc conversation(stream ConversationStream) returns (ConversationStream);
 }
@@ -19,7 +20,7 @@ message GetUserRequest {
 
 message User {
   string name = 1;
-  string dob = 2;
+  uint32 age = 2;
 }
 
 message SendUserListResponse {
