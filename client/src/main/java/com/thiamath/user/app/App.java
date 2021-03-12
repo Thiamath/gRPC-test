@@ -1,5 +1,8 @@
 package com.thiamath.user.app;
 
+import com.thiamath.user.client.Controller;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.fusesource.jansi.AnsiConsole;
 import org.jline.console.SystemRegistry;
 import org.jline.console.impl.SystemRegistryImpl;
@@ -10,51 +13,59 @@ import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
 import picocli.shell.jline3.PicocliCommands;
 
-import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         AnsiConsole.systemInstall();
 
         PicocliCommands.PicocliCommandsFactory factory = new PicocliCommands.PicocliCommandsFactory();
 
-        final CommandLine cmd = new CommandLine(new CliCommands(), factory);
-        final PicocliCommands commands = new PicocliCommands(cmd);
+        final String target = "localhost:8980";
+        final ManagedChannel channel = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
 
-        final Parser parser = new DefaultParser();
-        try (final Terminal terminal = TerminalBuilder.builder().build()) {
-            final SystemRegistry systemRegistry = new SystemRegistryImpl(parser, terminal, null, null);
-            systemRegistry.setCommandRegistries(commands);
-            systemRegistry.register("help", commands);
+        try {
+            final AppContext context = new AppContext(new Controller(channel));
+            final CommandLine cmd = new CommandLine(new CliCommands(context), factory);
+            final PicocliCommands commands = new PicocliCommands(cmd);
 
-            final LineReader reader = LineReaderBuilder.builder()
-                    .terminal(terminal)
-                    .completer(systemRegistry.completer())
-                    .parser(parser)
-                    .variable(LineReader.LIST_MAX, 50)
-                    .build();
+            final Parser parser = new DefaultParser();
+            try (final Terminal terminal = TerminalBuilder.builder().build()) {
+                final SystemRegistry systemRegistry = new SystemRegistryImpl(parser, terminal, null, null);
+                systemRegistry.setCommandRegistries(commands);
+                systemRegistry.register("help", commands);
 
-            final String prompt = "$> ";
-            final String rightPrompt = " <final>";
-            String line;
-            while (true) {
-                try {
-                    systemRegistry.cleanUp();
-                    line = reader.readLine(prompt, rightPrompt, (MaskingCallback) null, null);
-                    systemRegistry.execute(line);
-                } catch (UserInterruptException e) {
-                    // Ignore
-                } catch (EndOfFileException e) {
-                    return;
-                } catch (Exception e) {
-                    systemRegistry.trace(e);
+                final LineReader reader = LineReaderBuilder.builder()
+                        .terminal(terminal)
+                        .completer(systemRegistry.completer())
+                        .parser(parser)
+                        .variable(LineReader.LIST_MAX, 50)
+                        .build();
+
+                final String prompt = "$> ";
+                final String rightPrompt = " <final>";
+                String line;
+                while (true) {
+                    try {
+                        systemRegistry.cleanUp();
+                        line = reader.readLine(prompt, rightPrompt, (MaskingCallback) null, null);
+                        systemRegistry.execute(line);
+                    } catch (UserInterruptException e) {
+                        // Ignore
+                    } catch (EndOfFileException e) {
+                        return;
+                    } catch (Exception e) {
+                        systemRegistry.trace(e);
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } finally {
+            System.out.println("TERMINATING...");
+            channel.shutdownNow().awaitTermination(60, TimeUnit.SECONDS);
+            AnsiConsole.systemUninstall();
         }
-
-        AnsiConsole.systemUninstall();
     }
 
     /**
@@ -68,41 +79,25 @@ public class App {
                     ""},
             footer = {"", "Press Ctrl-D to exit."},
             subcommands = {
+                    GetCommand.class,
                     SendCommand.class,
                     PicocliCommands.ClearScreen.class,
                     CommandLine.HelpCommand.class
             })
     static class CliCommands implements Runnable {
-        PrintWriter out;
 
-        CliCommands() {
+        private final AppContext context;
+
+        CliCommands(final AppContext context) {
+            this.context = context;
         }
 
         public void run() {
-            out.println(new CommandLine(this).getUsageMessage());
+        }
+
+        public AppContext getContext() {
+            return context;
         }
     }
 
-    @CommandLine.Command(name = "send", mixinStandardHelpOptions = true, version = "1",
-            description = "Command to send objects to the user @|magenta server|@",
-            subcommands = {CommandLine.HelpCommand.class})
-    static class SendCommand implements Runnable {
-
-        @Override
-        public void run() {
-            System.out.println(new CommandLine(this).getUsageMessage());
-        }
-
-        @CommandLine.Command(name = "user", subcommands = {CommandLine.HelpCommand.class},
-                description = "Sends a user to the @|magenta server|@")
-        public void sendUser(@CommandLine.Parameters(description = "User name", arity = "1") String username) {
-            System.out.println("Sending user " + username);
-        }
-
-        @CommandLine.Command(name = "userlist", subcommands = {CommandLine.HelpCommand.class},
-                description = "Sends a user to the server")
-        public void sendUserList(@CommandLine.Parameters(description = "User name list", arity = "1..*") String[] username) {
-            System.out.println("Sending user " + String.join(", ", username));
-        }
-    }
 }

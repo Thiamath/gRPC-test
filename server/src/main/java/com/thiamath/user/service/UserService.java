@@ -8,10 +8,13 @@ import com.thiamath.user.UserOuterClass.GetUserRequest;
 import com.thiamath.user.UserOuterClass.SendUserListResponse;
 import com.thiamath.user.UserOuterClass.User;
 import com.thiamath.user.UserServiceGrpc.UserServiceImplBase;
+import io.grpc.Status;
+import io.grpc.StatusException;
 import io.grpc.stub.StreamObserver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserService extends UserServiceImplBase {
@@ -26,8 +29,16 @@ public class UserService extends UserServiceImplBase {
     public void getUser(GetUserRequest request, StreamObserver<User> responseObserver) {
         System.out.println(Ansi.colorize("Received User request ", Attribute.GREEN_TEXT())
                 + Ansi.colorize(request.getName(), Attribute.CYAN_TEXT()));
-        responseObserver.onNext(User.newBuilder().setName(request.getName()).build());
-        responseObserver.onCompleted();
+
+//        users.stream().filter(user -> user.getName().equals(request.getName())).forEach(responseObserver::onNext);
+
+        Optional<User> first = users.stream().filter(user -> user.getName().equals(request.getName())).findFirst();
+        if (first.isPresent()) {
+            responseObserver.onNext(first.get());
+            responseObserver.onCompleted();
+        } else {
+            responseObserver.onError(new StatusException(Status.NOT_FOUND.augmentDescription("User not found")));
+        }
     }
 
     @Override
@@ -36,6 +47,14 @@ public class UserService extends UserServiceImplBase {
         for (User user : users) {
             responseObserver.onNext(user);
         }
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void sendUser(User request, StreamObserver<SendUserListResponse> responseObserver) {
+        users.add(request);
+        System.out.println(Ansi.colorize("Added single user " + request, Attribute.YELLOW_TEXT()));
+        responseObserver.onNext(SendUserListResponse.newBuilder().setReceived(1).build());
         responseObserver.onCompleted();
     }
 
