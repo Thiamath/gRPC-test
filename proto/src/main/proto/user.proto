@@ -9,7 +9,7 @@ service UserService {
   rpc GetUserList(Void) returns (stream User);
   rpc sendUser(User) returns (SendUserListResponse);
   rpc sendUserList(stream User) returns (SendUserListResponse);
-  rpc conversation(stream ConversationStream) returns (ConversationStream);
+  rpc conversation(stream ConversationStream) returns (stream ConversationStream);
 }
 
 message Void {}

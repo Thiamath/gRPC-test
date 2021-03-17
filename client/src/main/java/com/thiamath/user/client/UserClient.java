@@ -10,6 +10,8 @@ import io.grpc.stub.StreamObserver;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -73,7 +75,50 @@ public class UserClient {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void conversation() throws Exception {
-        throw new Exception("Not yet implemented");
+    public Chat conversation() {
+        final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(1);
+        StreamObserver<UserOuterClass.ConversationStream> responseObserver = new StreamObserver<>() {
+            @Override
+            public void onNext(UserOuterClass.ConversationStream conversationStream) {
+                try {
+                    queue.put(conversationStream.getMessage());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        };
+        final StreamObserver<UserOuterClass.ConversationStream> conversation = asyncStub.conversation(responseObserver);
+        return new Chat() {
+            @Override
+            public String say(String phrase) {
+                conversation.onNext(UserOuterClass.ConversationStream.newBuilder().setMessage(phrase).build());
+                try {
+                    return queue.poll(10, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return "ERROR";
+            }
+
+            @Override
+            public void finish() {
+                conversation.onCompleted();
+            }
+        };
+    }
+
+    public interface Chat {
+        String say(String phrase);
+        void finish();
     }
 }

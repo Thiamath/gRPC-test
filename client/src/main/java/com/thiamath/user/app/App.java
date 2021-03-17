@@ -42,6 +42,8 @@ public class App {
                         .variable(LineReader.LIST_MAX, 50)
                         .build();
 
+                context.setLineReader(reader);
+
                 final String prompt = "$> ";
                 final String rightPrompt = " <final>";
                 String line;
@@ -81,6 +83,7 @@ public class App {
             subcommands = {
                     GetCommand.class,
                     SendCommand.class,
+                    ChatCommand.class,
                     PicocliCommands.ClearScreen.class,
                     CommandLine.HelpCommand.class
             })

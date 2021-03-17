@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class Controller {
 
+    private final Random random = new Random();
+
     private final UserClient client;
 
     public Controller(ManagedChannel channel) {
@@ -43,7 +45,7 @@ public class Controller {
     public void sendUser(final String username) {
         final UserOuterClass.User user = UserOuterClass.User.newBuilder()
                 .setName(username)
-                .setAge((new Random().nextInt() % 40) + 20)
+                .setAge((random.nextInt() % 40) + 20)
                 .build();
         client.sendUser(user);
     }
@@ -53,5 +55,9 @@ public class Controller {
                 .map((username) -> UserOuterClass.User.newBuilder().setName(username).setAge((new Random().nextInt() % 40) + 20).build())
                 .collect(Collectors.toUnmodifiableList());
         client.sendUserList(userList);
+    }
+
+    public UserClient.Chat startChat() {
+        return client.conversation();
     }
 }
