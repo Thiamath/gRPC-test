@@ -45,12 +45,11 @@ public class App {
                 context.setLineReader(reader);
 
                 final String prompt = "$> ";
-                final String rightPrompt = " <final>";
                 String line;
                 while (true) {
                     try {
                         systemRegistry.cleanUp();
-                        line = reader.readLine(prompt, rightPrompt, (MaskingCallback) null, null);
+                        line = reader.readLine(prompt, "", (MaskingCallback) null, null);
                         systemRegistry.execute(line);
                     } catch (UserInterruptException e) {
                         // Ignore
