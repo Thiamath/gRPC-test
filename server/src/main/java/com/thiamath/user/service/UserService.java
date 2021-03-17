@@ -98,6 +98,7 @@ public class UserService extends UserServiceImplBase {
 
             @Override
             public void onCompleted() {
+                System.out.println(Ansi.colorize("Chat session TERMINATED", Attribute.YELLOW_TEXT()));
                 responseObserver.onCompleted();
             }
         };

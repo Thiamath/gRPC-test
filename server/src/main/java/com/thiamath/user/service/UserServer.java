@@ -2,6 +2,7 @@ package com.thiamath.user.service;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -21,9 +22,11 @@ public class UserServer {
      * Main method.  This comment makes the linter happy.
      */
     public static void main(String[] args) throws Exception {
+        AnsiConsole.systemInstall();
         UserServer server = new UserServer(8980);
         server.start();
         server.blockUntilShutdown();
+        AnsiConsole.systemUninstall();
     }
 
     public void start() throws IOException {

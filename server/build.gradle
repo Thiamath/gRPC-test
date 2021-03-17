@@ -44,6 +44,8 @@ dependencies {
     implementation 'io.grpc:grpc-stub:1.33.1'
     // https://mvnrepository.com/artifact/com.diogonunes/JColor
     implementation group: 'com.diogonunes', name: 'JColor', version: '5.0.1'
+    implementation 'org.fusesource.jansi:jansi:2.3.1'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
@@ -60,7 +62,7 @@ application {
 }
 
 installDist {
-    destinationDir(new File("D:/temp/$project.name"))
+    destinationDir(new File("C:/temp/$project.name"))
 }
 
 test {
