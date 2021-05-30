@@ -10,22 +10,22 @@ targetCompatibility = '13'
 group 'test.thiamath.user'
 version '1.0-SNAPSHOT'
 
-//jib {
-//    from {
-//        image = 'gcr.io/distroless/java:11'
-//    }
-//    to {
-//        image = 'thiamath/grpc_test_server:latest'
-//        allowInsecureRegistries = true
+jib {
+    from {
+        image = 'openjdk:13'
+    }
+    to {
+        image = 'thiamath/grpc_test_server:latest'
+        allowInsecureRegistries = true
 //        auth {
 //            username = System.getenv("DOCKERHUB_USER")
 //            password = System.getenv("DOCKERHUB_TOKEN")
 //        }
-//    }
-//    container {
-//        ports = ['8980']
-//    }
-//}
+    }
+    container {
+        ports = ['8980']
+    }
+}
 
 repositories {
     mavenCentral()
@@ -62,7 +62,7 @@ application {
 }
 
 installDist {
-    destinationDir(new File("C:/temp/$project.name"))
+    destinationDir(new File("../dist/$project.name"))
 }
 
 test {

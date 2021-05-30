@@ -44,7 +44,7 @@ application {
 }
 
 installDist {
-    destinationDir(new File("C:/temp/$project.name"))
+    destinationDir(new File("../dist/$project.name"))
 }
 
 test {
