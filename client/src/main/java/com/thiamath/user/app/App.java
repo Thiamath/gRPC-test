@@ -21,7 +21,10 @@ public class App {
 
         PicocliCommands.PicocliCommandsFactory factory = new PicocliCommands.PicocliCommandsFactory();
 
-        final String target = "localhost:8980";
+        String target = "localhost:8980";
+        if (args.length > 0) {
+            target = args[0];
+        }
         final ManagedChannel channel = ManagedChannelBuilder.forTarget(target).usePlaintext().build();
 
         try {
