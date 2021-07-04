@@ -5,19 +5,27 @@ option java_package = "com.thiamath.user";
 package user;
 
 service UserService {
+  // Find one user
   rpc GetUser(GetUserRequest) returns (User);
+  // Retrieve all users
   rpc GetUserList(Void) returns (stream User);
+  // Store one user
   rpc sendUser(User) returns (SendUserListResponse);
+  // Store user list
   rpc sendUserList(stream User) returns (SendUserListResponse);
+  // Conversation stream between client and server.
   rpc conversation(stream ConversationStream) returns (stream ConversationStream);
 }
 
+// Empty body
 message Void {}
 
+// Request for one user
 message GetUserRequest {
   string name = 1;
 }
 
+// The User DTO
 message User {
   string name = 1;
   uint32 age = 2;
