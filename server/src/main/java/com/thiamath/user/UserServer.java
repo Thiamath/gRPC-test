@@ -1,5 +1,6 @@
-package com.thiamath.user.service;
+package com.thiamath.user;
 
+import com.thiamath.user.service.UserService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.fusesource.jansi.AnsiConsole;
