@@ -7,8 +7,8 @@ plugins {
 sourceCompatibility = '13'
 targetCompatibility = '13'
 
-group 'test.thiamath.user'
-version '1.0-SNAPSHOT'
+group = 'test.thiamath.user'
+version = '1.0-SNAPSHOT'
 
 jib {
     from {
@@ -39,6 +39,15 @@ repositories {
     }
 }
 
+configurations {
+    instrumentedJars {
+        canBeConsumed = true
+        canBeResolved = false
+        // If you want this configuration to share the same dependencies, otherwise omit this line
+        extendsFrom implementation, runtimeOnly
+    }
+}
+
 dependencies {
     implementation 'io.grpc:grpc-protobuf:1.33.1'
     implementation 'io.grpc:grpc-stub:1.33.1'
@@ -51,9 +60,6 @@ dependencies {
 
 
     implementation project(':proto')
-    //implementation (group: 'test.thiamath.user', name: 'proto', version: '1.0-SNAPSHOT'){
-    //    changing = true
-    //}
 }
 
 application {

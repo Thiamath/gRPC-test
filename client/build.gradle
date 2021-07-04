@@ -39,7 +39,7 @@ dependencies {
 }
 
 application {
-    mainClassName = 'com.thiamath.user.app.App'
+    getMainClass().set('com.thiamath.user.app.App')
     applicationDefaultJvmArgs = ['-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:9292']
 }
 

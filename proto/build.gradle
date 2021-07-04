@@ -8,6 +8,9 @@ plugins {
     id 'maven-publish'
 }
 
+sourceCompatibility = '13'
+targetCompatibility = '13'
+
 group 'test.thiamath.user'
 version '1.0-SNAPSHOT'
 
